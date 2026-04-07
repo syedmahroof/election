@@ -1,0 +1,5 @@
+# Apache: correct MIME types for JS modules (optional; Valet uses nginx)
+<IfModule mod_mime.c>
+  AddType application/javascript js mjs
+  AddType text/css css
+</IfModule>

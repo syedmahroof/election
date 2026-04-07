@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toBlob } from "html-to-image";
+import { domToBlob } from "modern-screenshot";
+import html2canvas from "html2canvas";
 
 const LAC_OPTIONS = [
   { value: "", label: "Select constituency" },
@@ -132,12 +134,65 @@ export default function App() {
   const captureCertificatePng = useCallback(async () => {
     const el = certificateRef.current;
     if (!el) return null;
-    return toBlob(el, {
-      pixelRatio: 2,
-      cacheBust: true,
-      backgroundColor: "#ffffff",
-    });
+
+    const scale = Math.min(2, window.devicePixelRatio || 2);
+
+    try {
+      const blob = await domToBlob(el, {
+        scale,
+        type: "image/png",
+        backgroundColor: "#ffffff",
+        quality: 1,
+        maximumCanvasSize: 16384,
+      });
+      if (blob && blob.size > 0) return blob;
+    } catch {
+      /* try next */
+    }
+
+    try {
+      const blob = await toBlob(el, {
+        pixelRatio: Math.min(scale, 1.5),
+        cacheBust: true,
+        backgroundColor: "#ffffff",
+        skipFonts: true,
+      });
+      if (blob && blob.size > 0) return blob;
+    } catch {
+      /* try next */
+    }
+
+    try {
+      const canvas = await html2canvas(el, {
+        scale: Math.min(scale, 1.75),
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        width: el.offsetWidth,
+        height: el.offsetHeight,
+        windowWidth: el.scrollWidth,
+        windowHeight: el.scrollHeight,
+      });
+      return await new Promise((resolve) => {
+        canvas.toBlob((b) => resolve(b || null), "image/png", 1);
+      });
+    } catch {
+      return null;
+    }
   }, []);
+
+  const triggerDownload = (blob, filename) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 800);
+  };
 
   const downloadCertificate = async () => {
     if (!certificateRef.current) return;
@@ -145,15 +200,10 @@ export default function App() {
     try {
       const blob = await captureCertificatePng();
       if (!blob) throw new Error("empty");
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${certificateBasename()}.png`;
-      a.click();
-      URL.revokeObjectURL(url);
+      triggerDownload(blob, `${certificateBasename()}.png`);
     } catch {
       window.alert(
-        "Could not save the image. Try turning off blockers or use another browser."
+        "Could not create the image. Try: update your browser, disable strict content blockers for this site, or use “Share” on your phone. If it keeps failing, take a screenshot of the certificate."
       );
     } finally {
       setExporting(false);
@@ -197,12 +247,7 @@ export default function App() {
       }
 
       if (blob) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = fname;
-        a.click();
-        URL.revokeObjectURL(url);
+        triggerDownload(blob, fname);
       }
     } catch (e) {
       if (e?.name === "AbortError") return;
@@ -247,7 +292,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-10">
+      <main className="mx-auto w-full min-w-0 max-w-3xl flex-1 px-5 py-10">
         {!submitted ? (
           <>
             <div className="mb-8 space-y-3">
@@ -440,14 +485,14 @@ export default function App() {
               </button>
             </div>
 
-            <div className="flex justify-center px-0">
+            <div className="flex w-full min-w-0 justify-center px-0">
               <article
                 ref={certificateRef}
-                className="relative w-full max-w-[420px] overflow-hidden rounded-3xl border-[3px] border-[#c5a059] bg-gradient-to-b from-[#fffdf9] via-white to-[#eef6f1] shadow-[0_25px_80px_rgba(0,52,27,0.14)] sm:aspect-[4/5]"
+                className="relative w-full max-w-[420px] overflow-hidden rounded-3xl border-[3px] border-[#c5a059] bg-gradient-to-b from-[#fffdf9] via-white to-[#eef6f1] shadow-xl"
               >
                 <div className="pointer-events-none absolute inset-[6px] rounded-[1.15rem] border border-[#c5a059]/35 sm:inset-[10px] sm:rounded-[1.35rem]" />
 
-                <div className="relative flex min-h-0 flex-col px-5 pb-8 pt-8 text-center sm:h-full sm:px-8 sm:pb-9 sm:pt-10">
+                <div className="relative flex flex-col px-5 pb-10 pt-8 text-center sm:px-8 sm:pb-11 sm:pt-10">
                   <div className="text-center">
                     <p className="text-[9px] font-bold uppercase tracking-wide text-primary sm:tracking-[0.18em]">
                       Government of Kerala
@@ -484,7 +529,7 @@ export default function App() {
                   </p>
                   <div className="mx-auto mt-3 h-1 w-24 shrink-0 rounded-full bg-gradient-to-r from-transparent via-[#c5a059] to-transparent sm:mt-4" />
 
-                  <div className="mt-6 space-y-6 border-t border-slate-200/90 pt-5 text-left sm:mt-auto sm:pt-8">
+                  <div className="mt-8 space-y-6 border-t border-slate-200/90 pt-6 text-left sm:pt-8">
                     <div className="grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-4">
                       <div className="min-w-0">
                         <p className="text-[9px] font-bold uppercase tracking-wide text-slate-400 sm:tracking-[0.15em]">
@@ -543,8 +588,8 @@ export default function App() {
               </button>
             </div>
             <p className="text-center text-xs text-slate-500">
-              Scales to your screen on mobile; classic 4:5 on larger displays for
-              Instagram. Tag responsibly.
+              Full certificate is always visible on phones and desktop. Download
+              may ask for storage permission on some devices. Tag responsibly.
             </p>
           </div>
         )}

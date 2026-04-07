@@ -14,9 +14,6 @@ const LAC_LABELS = {
   sulthan_bathery: "Sulthan Bathery",
 };
 
-const EMBLEM =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBRaGXF0k78epyiSS6uEIQV7LMMfPpnfGBG3b7akvHN3E9cMG_YyID7On9KEl6Fyt82WjDDQYljhLwBPZAl3qNLILbyy1AaXMnApH6ueqqtbrFe4U0XOW8RknWCKZZH0CedCLtVeTAvOxKHjA8IivqYThyTa0cRpMzdgw3bLrF_KljperfCQLe2TB3J34Xt-gZoAopQSjR48TIha8Gp60MtwDvuOwghovDjLaoC-QHE48h-o4yjHQhUQj9Q0RVvE2Txaz5oV_uEw8-Y";
-
 export default function App() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -182,7 +179,7 @@ export default function App() {
         await navigator.share({
           files: [file],
           title: "Participation certificate",
-          text: `${name.trim()} — Wayanad 2024`,
+          text: `${name.trim()} — Wayanad 2026`,
         });
         return;
       }
@@ -191,7 +188,7 @@ export default function App() {
         try {
           await navigator.share({
             title: "Participation certificate",
-            text: `${name.trim()} — Wayanad 2024`,
+            text: `${name.trim()} — Wayanad 2026`,
           });
           return;
         } catch (e) {
@@ -243,8 +240,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-primary/10 bg-surface/90 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-3xl items-center gap-3 px-5 py-4">
-          <img src={EMBLEM} alt="" className="h-9 w-9 object-contain" />
+        <div className="mx-auto max-w-3xl px-5 py-4">
           <span className="text-lg font-bold text-primary-deep">
             Kerala Legislative Assembly
           </span>
@@ -256,7 +252,7 @@ export default function App() {
           <>
             <div className="mb-8 space-y-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-gold">
-                Your voice · Election 2024
+                Your voice · Election 2026
               </p>
               <h1 className="text-3xl font-bold leading-tight text-primary md:text-4xl">
                 Your participation, proudly on record
@@ -444,85 +440,78 @@ export default function App() {
               </button>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center px-0">
               <article
                 ref={certificateRef}
-                className="relative aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[2rem] border-[3px] border-[#c5a059] bg-gradient-to-b from-[#fffdf9] via-white to-[#eef6f1] shadow-[0_25px_80px_rgba(0,52,27,0.14)]"
+                className="relative w-full max-w-[420px] overflow-hidden rounded-3xl border-[3px] border-[#c5a059] bg-gradient-to-b from-[#fffdf9] via-white to-[#eef6f1] shadow-[0_25px_80px_rgba(0,52,27,0.14)] sm:aspect-[4/5]"
               >
-                <div className="pointer-events-none absolute inset-[10px] rounded-[1.35rem] border border-[#c5a059]/35" />
+                <div className="pointer-events-none absolute inset-[6px] rounded-[1.15rem] border border-[#c5a059]/35 sm:inset-[10px] sm:rounded-[1.35rem]" />
 
-                <div className="relative flex h-full flex-col px-8 pb-9 pt-10 text-center">
-                  <div className="flex items-start justify-between gap-3 text-left">
-                    <img
-                      src={EMBLEM}
-                      alt=""
-                      className="h-12 w-12 shrink-0 object-contain drop-shadow-sm"
-                    />
-                    <div className="text-right">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-primary">
-                        Government of Kerala
-                      </p>
-                      <p className="font-display text-base font-semibold text-primary-deep">
-                        Wayanad
-                      </p>
-                    </div>
+                <div className="relative flex min-h-0 flex-col px-5 pb-8 pt-8 text-center sm:h-full sm:px-8 sm:pb-9 sm:pt-10">
+                  <div className="text-center">
+                    <p className="text-[9px] font-bold uppercase tracking-wide text-primary sm:tracking-[0.18em]">
+                      Government of Kerala
+                    </p>
+                    <p className="font-display text-base font-semibold text-primary-deep">
+                      Wayanad
+                    </p>
                   </div>
 
-                  <p className="mx-auto mt-6 inline-flex rounded-full border border-[#c5a059]/40 bg-white/90 px-5 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#775a19] shadow-sm">
-                    Election 2024
+                  <p className="mx-auto mt-4 inline-flex max-w-[95%] flex-wrap justify-center rounded-full border border-[#c5a059]/40 bg-white/90 px-4 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#775a19] shadow-sm sm:mt-6 sm:px-5 sm:tracking-[0.22em]">
+                    Election 2026
                   </p>
 
                   {photoPreview ? (
                     <img
                       src={photoPreview}
                       alt=""
-                      className="mx-auto mt-5 h-[118px] w-[118px] shrink-0 rounded-full object-cover shadow-[0_12px_32px_rgba(0,52,27,0.18)] ring-4 ring-[#c5a059]/35"
+                      className="mx-auto mt-4 h-24 w-24 shrink-0 rounded-full object-cover shadow-[0_12px_32px_rgba(0,52,27,0.18)] ring-4 ring-[#c5a059]/35 sm:mt-5 sm:h-[118px] sm:w-[118px]"
                     />
                   ) : null}
 
-                  <h3 className="font-display mt-6 text-xl font-bold leading-snug text-primary-deep sm:text-[1.65rem]">
+                  <h3 className="font-display mt-4 text-lg font-bold leading-snug text-primary-deep sm:mt-6 sm:text-[1.65rem]">
                     Certificate of Participation
                   </h3>
-                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500 sm:tracking-[0.2em]">
                     Kerala Legislative Assembly
                   </p>
                   <p className="mt-2 px-1 text-xs italic leading-relaxed text-slate-500">
                     With gratitude for your democratic voice
                   </p>
 
-                  <p className="font-display mt-8 text-[2rem] font-bold leading-none tracking-tight text-primary-deep sm:text-[2.35rem]">
+                  <p className="font-display mx-auto mt-6 max-w-full break-words px-2 text-[clamp(1.35rem,6vw+0.6rem,2.35rem)] font-bold leading-tight tracking-tight text-primary-deep sm:mt-8">
                     {name.trim()}
                   </p>
-                  <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-transparent via-[#c5a059] to-transparent" />
+                  <div className="mx-auto mt-3 h-1 w-24 shrink-0 rounded-full bg-gradient-to-r from-transparent via-[#c5a059] to-transparent sm:mt-4" />
 
-                  <div className="mt-auto pt-8">
-                    <div className="grid grid-cols-2 gap-4 border-t border-slate-200/90 pt-6 text-left">
-                      <div>
-                        <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                  <div className="mt-6 space-y-6 border-t border-slate-200/90 pt-5 text-left sm:mt-auto sm:pt-8">
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-4">
+                      <div className="min-w-0">
+                        <p className="text-[9px] font-bold uppercase tracking-wide text-slate-400 sm:tracking-[0.15em]">
                           Constituency
                         </p>
-                        <p className="mt-1.5 text-base font-semibold text-primary">
+                        <p className="mt-1 break-words text-sm font-semibold text-primary sm:mt-1.5 sm:text-base">
                           {LAC_LABELS[lac]}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                      <div className="min-w-0 text-right">
+                        <p className="text-[9px] font-bold uppercase tracking-wide text-slate-400 sm:tracking-[0.15em]">
                           Date
                         </p>
-                        <p className="mt-1.5 text-base font-semibold text-primary">
+                        <p className="mt-1 break-words text-sm font-semibold text-primary sm:mt-1.5 sm:text-base">
                           April 09, 2026
                         </p>
                       </div>
                     </div>
 
                     {email.trim() ? (
-                      <p className="mt-4 text-[11px] text-slate-500">
+                      <p className="break-all text-[11px] leading-snug text-slate-500">
                         {email.trim()}
                       </p>
                     ) : null}
 
-                    <div className="mt-6 text-left">
-                      <div className="mb-2 h-px w-32 bg-slate-300/90" />
+                    <div>
+                      <div className="mb-2 h-px max-w-32 bg-slate-300/90" />
                       <p className="text-[9px] font-bold uppercase tracking-wider text-primary">
                         Returning Officer
                       </p>
@@ -554,7 +543,8 @@ export default function App() {
               </button>
             </div>
             <p className="text-center text-xs text-slate-500">
-              Sized for Instagram portrait posts (4:5). Tag responsibly.
+              Scales to your screen on mobile; classic 4:5 on larger displays for
+              Instagram. Tag responsibly.
             </p>
           </div>
         )}
@@ -562,7 +552,7 @@ export default function App() {
 
       <footer className="mt-auto border-t border-slate-200/80 bg-[#e8e6e2] px-5 py-8">
         <p className="text-center text-xs text-slate-600">
-          © 2024 Kerala Legislative Assembly
+          © 2026 Kerala Legislative Assembly
         </p>
       </footer>
     </div>
